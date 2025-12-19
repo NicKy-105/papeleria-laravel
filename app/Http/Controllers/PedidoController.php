@@ -20,19 +20,10 @@ class PedidoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'producto' => 'required|string|max:100',
-            'nomCliente' => 'required|regex:/^[a-záéíóúñüA-ZÁÉÍÓÚÑÜ\s\']+$/u|max:100',
-            'telefono' => 'required|regex:/^[0-9]{10}$/|max:10',
-            'estado' => 'required|string|max:50'
-        ], [
-            'nomCliente.required' => 'El nombre del cliente es obligatorio',
-            'nomCliente.regex' => 'El nombre solo puede contener letras',
-            'telefono.required' => 'El teléfono es obligatorio',
-            'telefono.regex' => 'El teléfono debe contener exactamente 10 dígitos numéricos',
-            'producto.required' => 'El producto es obligatorio',
-            'estado.required' => 'Debe seleccionar un estado'
-        ]);
+        $request->validate(
+            $this->validaciones(),
+            $this->mensajes()
+        );
 
         Pedido::create($request->all());
         return redirect()->route('pedidos.index')
@@ -52,23 +43,10 @@ class PedidoController extends Controller
 
     public function update(Request $request, Pedido $pedido)
     {
-        $request->validate([
-            'producto' => 'required|string|max:100',
-            'nomCliente' => 'required|regex:/^[a-záéíóúñüA-ZÁÉÍÓÚÑÜ\s\']+$/u|max:100',
-            'telefono' => 'required|regex:/^[0-9]{10}$/|max:10',
-            'estado' => 'required|string|max:50',
-            'fechaPedido' => 'required|date'
-        ], [
-            'nomCliente.required' => 'El nombre del cliente es obligatorio',
-            'nomCliente.regex' => 'El nombre solo puede contener letras',
-            'telefono.required' => 'El teléfono es obligatorio',
-            'telefono.regex' => 'El teléfono debe contener exactamente 10 dígitos numéricos',
-            'producto.required' => 'El producto es obligatorio',
-            'estado.required' => 'Debe seleccionar un estado',
-            'fechaPedido.required' => 'La fecha del pedido es obligatoria',
-            'fechaPedido.date' => 'La fecha del pedido no es válida'
-        ]);
-
+        $request->validate(
+            $this->validacionesextra(),
+            $this->mensajes()
+        );
 
         $pedido->update($request->all());
         return redirect()->route('pedidos.index')
@@ -80,5 +58,36 @@ class PedidoController extends Controller
         $pedido->delete();
         return redirect()->route('pedidos.index')
             ->with('success', 'Pedido eliminado exitosamente');
+    }
+
+    private function validaciones(): array
+    {
+        return [
+            'producto' => 'required|string|max:100',
+            'nomCliente' => 'required|regex:/^[a-záéíóúñüA-ZÁÉÍÓÚÑÜ\s\']+$/u|max:100',
+            'telefono' => 'required|regex:/^[0-9]{10}$/|max:10',
+            'estado' => 'required|string|max:50'
+        ];
+    }
+    private function validacionesextra()
+    {
+        return array_merge($this->validaciones(), [
+            'fechaPedido' => 'required|date'
+        ]);
+    }
+
+    private function mensajes()
+    {
+        return [
+            'nomCliente.required' => 'El nombre del cliente es obligatorio',
+            'nomCliente.regex' => 'El nombre solo puede contener letras',
+            'telefono.required' => 'El teléfono es obligatorio',
+            'telefono.regex' => 'El teléfono debe contener exactamente 10 dígitos numéricos',
+            'telefono.max' => 'El teléfono debe tener 10 dígitos',
+            'producto.required' => 'El producto es obligatorio',
+            'estado.required' => 'Debe seleccionar un estado',
+            'fechaPedido.required' => 'La fecha del pedido es obligatoria',
+            'fechaPedido.date' => 'La fecha del pedido no es válida'
+        ];
     }
 }

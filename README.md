@@ -43,8 +43,12 @@
 
 **Razón:** El usuario debería de poder eliminar su registro si el pedido fue entregado y asi lo desea, pero no se borra fisicamente debido a que el cliente puede decir que en realidad no le entregaron su pedido, con el eliminado lógico nos aseguramos de tener todos los registros por prevención.
 
-![Formulario de ingreso](capturas/formulario.png)
-![Listado de pedidos](capturas/listado.png)
-![Formulario de ingreso pedido](capturas/movil.png)
-![Listado de vehículos pedido](capturas/movillista.png)
+- **Validaciones**
+    - Nombre del cliente: solo letras, tildes, ñ y espacios
+    - Teléfono: exactamente 10 dígitos numéricos
+    - Todos los campos obligatorios
+    - Mensajes de error personalizados en español
 
+
+
+**Link:** https://github.com/NicKy-105/papeleria-laravel.git
